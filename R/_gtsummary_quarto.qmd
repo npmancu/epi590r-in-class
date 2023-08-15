@@ -50,9 +50,9 @@ black_female_denom <- inline_text(table1, variable = "race_eth_cat",
                              level="Black",
                              column = "Female", 
                              pattern = "{N}")
+#can use round function round(numeric_variable, 1)
 
 ```
-
 @tbl-one contains descriptive statistics from our study sample. In our sample, `r hispanic_male_perc` of male participants were of Hispanic ethnicity and `r black_female_num` out of `r black_female_denom` female participants were Black.
 
 ```{r}
