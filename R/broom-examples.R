@@ -45,20 +45,30 @@ tidy(logistic_model, conf.int = TRUE, exponentiate = TRUE) |>
 	facet_grid(cols = vars(variable), scales = "free", space = "free") +
 	scale_y_log10()
 
-#in class activity
-logistic_model_RR <- glm(glasses ~ eyesight_cat + sex_cat,
-												 data = nlsy, family = binomial(link = "log"))
-logistic_model_RR_pois <- glm(glasses ~ eyesight_cat + sex_cat,
-															data = nlsy, family = poisson())
 
 
-tidy_bin_RR <- tidy(logistic_model_RR, conf.int = TRUE)
-tidy_pois_RR <- tidy(logistic_model_RR_pois, conf.int = TRUE)
+## Exercises
 
-bind_rows(
-	binomial = tidy_bin_RR,
-	poisson = tidy_pois_RR,
-	.id = "model") |>
-	mutate(
-		term = str_remove(term, model),
-		term = ifelse(term == "", model, term))
+eyes_binomial_model <- glm(glasses ~ eyesight_cat + sex_cat,
+													 data = nlsy, family = binomial(link = "log"))
+eyes_poisson_model <- glm(glasses ~ eyesight_cat + sex_cat,
+													data = nlsy, family = poisson(link = "log"))
+
+# usually I don't like adding packages in the middle of a script,
+# but I'll do it here to be clear what they're used for
+library(sandwich)
+library(lmtest)
+
+both_models <- bind_rows(
+	binomial = tidy(eyes_binomial_model, conf.int = TRUE),
+	poisson = tidy(coeftest(eyes_poisson_model, vcov = vcovHC, type = "HC1"), conf.int = TRUE),
+	.id = "model"
+) |>
+	# coeftest doesn't allow you to exponentiate, so do it here
+	mutate(across(c(estimate, conf.low, conf.high), exp))
+
+# compare estimates and CIs directly
+both_models |>
+	select(-std.error, -statistic, -p.value) |>
+	pivot_wider(values_from = c(estimate, conf.low, conf.high),
+							names_from = model)
