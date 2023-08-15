@@ -42,14 +42,18 @@ hispanic_male_perc <- inline_text(table1, variable = "race_eth_cat",
                              level="Hispanic",
                              column = "Male", 
                              pattern = "{p}%")
-black_female_perc <- inline_text(table1, variable = "race_eth_cat", 
+black_female_num <- inline_text(table1, variable = "race_eth_cat", 
                              level="Black",
                              column = "Female", 
-                             pattern = "{p}%")
+                             pattern = "{n}")
+black_female_denom <- inline_text(table1, variable = "race_eth_cat", 
+                             level="Black",
+                             column = "Female", 
+                             pattern = "{N}")
 
 ```
 
-@tbl-one contains descriptive statistics from our study sample. In our sample, `r hispanic_male_perc` of male participants were of Hispanic ethnicity and `r black_female_perc` of female participants were Black.
+@tbl-one contains descriptive statistics from our study sample. In our sample, `r hispanic_male_perc` of male participants were of Hispanic ethnicity and `r black_female_num` out of `r black_female_denom` female participants were Black.
 
 ```{r}
 #| cache: true
