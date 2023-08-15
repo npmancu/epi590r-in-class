@@ -193,6 +193,7 @@ tbl_int <- tbl_regression(
 ```
 
 ```{r}
+#| error: true
 tbl_merge(list(tbl_no_int, tbl_int), 
           tab_spanner = c("**Model 1**", "**Model 2**"))
 ```
